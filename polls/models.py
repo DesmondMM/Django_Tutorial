@@ -29,7 +29,7 @@ class Question(models.Model):
         was_published_recently.boolean = True
         was_published_recently.short_description = 'Published recently?'
 
-def test_was_published_recently_with_recent_question(self):
+    def test_was_published_recently_with_recent_question(self):
          """
          was_published_recently() should return True for questions whose
          pub_date is within the last day.
