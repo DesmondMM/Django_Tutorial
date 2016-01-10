@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework import *
 
 urlpatterns = [
     url(r'^', include('polls.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),
+     url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 ]

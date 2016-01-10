@@ -1,9 +1,26 @@
 from django.contrib.auth.models import User
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 
 from .models import Choice, Question
 from polls.serializers import QuestionSerializer, ChoiceSerializer,\
     VoteSerializer,UserSerializer
+
+class RestrictedView(APIView):
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication, )
+
+    def get(self, request):
+        data = {
+            'foo': 'bar'
+        }
+
+        return Response(data)
 
 class QuestionList(generics.ListCreateAPIView):
 
@@ -22,6 +39,14 @@ class QuestionDetail(generics.RetrieveDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+class ChoiceList(generics.ListCreateAPIView):
+
+    """
+    List all polls, or create a new poll.
+    """
+
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
 
 class ChoiceDetail(generics.RetrieveUpdateAPIView):
     """

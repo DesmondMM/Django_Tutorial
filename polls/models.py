@@ -3,6 +3,13 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
+
+owner = models.ForeignKey('auth.User', related_name='polls')
+highlighted = models.TextField()
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
