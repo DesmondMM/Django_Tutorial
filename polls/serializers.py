@@ -1,29 +1,26 @@
 from rest_framework import serializers
-
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueTogetherValidator
-
+from rest_framework.response import Response
 from .models import Question, Choice
+from django.db.models import F
 
-
-class VoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Choice
-
-
-    def create(self, validated_data):
-        poll = validated_data["question"]
-        choice = validated_data["choice"]
-        if not choice in poll.choices.all():
-            raise serializers.ValidationError('Choice must be valid.')
-        vote = super(VoteSerializer, self).create(validated_data)
-        return vote
 
 class ChoiceSerializer(serializers.ModelSerializer):
-    votes = VoteSerializer(many=True, required=False)
-
     class Meta:
         model = Choice
+        fields = ('question', 'choice_text', 'votes', 'id')
+
+    def create(self, validated_data):
+        choice =  Choice(
+            question=validated_data['question'],
+            choice_text=validated_data['choice_text'],
+            votes=validated_data['votes'],
+            id=validated_data['id']
+        )
+        choice.save()
+        return choice
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True, read_only=True, required=False)
@@ -41,9 +38,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         return poll
 
 
-
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('username', 'email', 'password')

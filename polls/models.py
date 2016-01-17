@@ -30,20 +30,7 @@ class Question(models.Model):
         old_question = Question(pub_date=time)
         self.assertEqual(old_question.was_published_recently(), False)
 
-    def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-        was_published_recently.admin_order_field = 'pub_date'
-        was_published_recently.boolean = True
-        was_published_recently.short_description = 'Published recently?'
-
-    def test_was_published_recently_with_recent_question(self):
-         """
-         was_published_recently() should return True for questions whose
-         pub_date is within the last day.
-         """
-         time = timezone.now() - datetime.timedelta(hours=1)
-         recent_question = Question(pub_date=time)
-         self.assertEqual(recent_question.was_published_recently(), True)
+   
 
 
 class Choice(models.Model):

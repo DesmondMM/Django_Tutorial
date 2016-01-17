@@ -3,13 +3,17 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 from .models import Choice, Question
 from polls.serializers import QuestionSerializer, ChoiceSerializer,\
-    VoteSerializer,UserSerializer
+    UserSerializer
+
 
 class RestrictedView(APIView):
     permission_classes = (IsAuthenticated, )
@@ -22,6 +26,7 @@ class RestrictedView(APIView):
 
         return Response(data)
 
+
 class QuestionList(generics.ListCreateAPIView):
 
     """
@@ -31,6 +36,7 @@ class QuestionList(generics.ListCreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+
 class QuestionDetail(generics.RetrieveDestroyAPIView):
     """
     Create a Poll, delete a poll
@@ -38,6 +44,7 @@ class QuestionDetail(generics.RetrieveDestroyAPIView):
 
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
 
 class ChoiceList(generics.ListCreateAPIView):
 
@@ -47,6 +54,7 @@ class ChoiceList(generics.ListCreateAPIView):
 
     queryset = Choice.objects.all()
     serializer_class = ChoiceSerializer
+
 
 class ChoiceDetail(generics.RetrieveUpdateAPIView):
     """
@@ -61,8 +69,8 @@ class CreateChoice(generics.CreateAPIView):
     """
     Create a vote
     """
-
-    serializer_class = VoteSerializer
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
 
 
 class UserCreate(generics.CreateAPIView):
@@ -74,6 +82,7 @@ class UserCreate(generics.CreateAPIView):
     permission_classes = ()
     serializer_class = UserSerializer
 
+
 class UserDetail(generics.RetrieveAPIView):
         """
         Retrieve a User
@@ -81,5 +90,7 @@ class UserDetail(generics.RetrieveAPIView):
 
         queryset = User.objects.all()
         serializer_class = UserSerializer
+
+
 
 
