@@ -61,3 +61,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+__pycache__
+.idea
+db.sqlite3
